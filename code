@@ -1,0 +1,406 @@
+import sys, time
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtSql import *
+from PyQt5.QtCore import *
+import mysql.connector
+from mysql.connector import Error
+
+def create_connection(host_name, user_name, user_password, db_name):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password,
+            database=db_name
+        )
+        print("Connection to MySQL DB successful")
+    except Error as e:
+        print(f"The error '{e}' occurred")
+
+    return connection
+connection = create_connection("localhost", "root", "**********", "med_org")
+
+QSS_white = '''QWidget {
+    background-color: white;
+    color: black;
+}'''
+QSS_blue = '''QWidget {
+    background-color: azure;
+}'''
+
+        
+class Window1(QWidget):
+    def __init__(self):
+        super(Window1, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        
+    def create_widgets(self):
+        self.btn1 = QPushButton("Филиалы")
+        self.btn1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Отделения")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn3 = QPushButton("Медики")
+        self.btn3.setStyleSheet(QSS_white)
+        self.btn4 = QPushButton("Пациенты")
+        self.btn4.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Проверка корректности")
+        self.btn5.setStyleSheet(QSS_white)
+        self.btn6 = QPushButton("Назад")
+        self.btn6.setStyleSheet(QSS_white)
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.btn1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn3)
+        layout.addWidget(self.btn4)
+        layout.addWidget(self.btn5)
+        layout.addWidget(self.btn6)
+        self.setLayout(layout)
+        self.setWindowTitle("Информация о пациентах, врачах, отделениях и филиалах")
+        self.resize(200, 250)
+
+    def set_connects(self):
+        self.btn1.clicked.connect(self.show_window_t1)
+      #  self.btn1.clicked.connect(self.close)
+        self.btn2.clicked.connect(self.show_window_t2)
+       # self.btn2.clicked.connect(self.close)
+        self.btn3.clicked.connect(self.show_window_t3)
+        self.btn4.clicked.connect(self.show_window_t4)
+        #self.btn4.clicked.connect(self.close)
+        self.btn5.clicked.connect(self.show_window)
+        #self.btn5.clicked.connect(self.close)
+        self.btn6.clicked.connect(self.show_window)
+        self.btn6.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show() 
+        
+    def show_window_t1(self):
+        self.t1 = T1()
+        self.t1.show()
+        self.t1.fill()   
+        
+    def show_window_t2(self):
+        self.t2 = T2()
+        self.t2.show()
+        self.t2.fill()   
+        
+    def show_window_t3(self):
+        self.t3 = T3()
+        self.t3.show()
+        self.t3.fill()   
+        
+    def show_window_t4(self):
+        self.t4 = T4()
+        self.t4.show()
+        self.t4.fill()        
+        
+        
+class T1(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Филиал')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+
+        labels = ['FIL_ID', 'DEP_ID', 'FILIAL_ID', 'DEPARTMENT_ID','FILIAL_NAME','FILIAL_ADDRESS']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+
+        query = ("SELECT * FROM filial")
+
+        cur.execute(query)
+
+        for (fil_id, dep_id, filial_id, department_id, pat_in_fil, doc_in_fil, filial_name, filial_address) in cur:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(fil_id)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(str(dep_id)))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(str(filial_id)))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(str(department_id)))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(str(pat_in_fil)))
+            self.table_widget.setItem(row, 5, QTableWidgetItem(str(doc_in_fil)))
+            self.table_widget.setItem(row, 6, QTableWidgetItem(filial_name))
+            self.table_widget.setItem(row, 7, QTableWidgetItem(filial_address))
+            
+class T2(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Отделение')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+
+        labels = ['ID', 'DEPARTMENT', 'PAT_IN_DEP', 'DOC_IN_DEP','DEPARTMENT_NAME']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+
+        query = ("SELECT * FROM department")
+
+        cur.execute(query)
+
+        for (dep_id, department_id, pat_in_dep_id, doc_in_dep_id, department_name) in cur:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(dep_id)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(str(department_id)))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(str(pat_in_dep_id)))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(str(doc_in_dep_id)))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(department_name))            
+        
+        
+class T3(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Медики')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+
+        labels = ['doctor_id', 'doctor_name', 'doctor_telephone', 'doctor_sex', 'doctor_age', 'doctor_experience', 'doctor_job', 'doctor_room']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+
+        query = ("SELECT * FROM doctor")
+
+        cur.execute(query)
+
+        for (doctor_id, doctor_name, doctor_telephone, doctor_sex, doctor_age, doctor_experience, doctor_job, doctor_room) in cur:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(doctor_id)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(doctor_name))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(doctor_telephone))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(doctor_sex))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(str(doctor_age)))
+            self.table_widget.setItem(row, 5, QTableWidgetItem(str(doctor_experience)))
+            self.table_widget.setItem(row, 6, QTableWidgetItem(doctor_job))
+            self.table_widget.setItem(row, 7, QTableWidgetItem(str(doctor_room)))
+                
+class T4(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Пациенты')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+
+        labels = ['patient_id', 'patient_name', 'patient_telephone', 'patient_sex', 'patient_age']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+
+        query = ("SELECT * FROM patient")
+
+        cur.execute(query)
+
+        for (patient_id, patient_name, patient_telephone, patient_sex, patient_age) in cur:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(patient_id)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(patient_name))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(patient_telephone))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(patient_sex))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(str(patient_age)))    
+            
+            
+            
+        
+        
+class Window2(QWidget):
+    def __init__(self):
+        super(Window2, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.btn1 = QPushButton("Добавление нового пациента")
+        self.btn1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Удаление пациента")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn3 = QPushButton("Запись пациента")
+        self.btn3.setStyleSheet(QSS_white)
+        self.btn4 = QPushButton("Удаление записи пациента ко врачу")
+        self.btn4.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.btn1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn3)
+        layout.addWidget(self.btn4)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Редактирование информации")
+        self.resize(200, 250)
+
+    def set_connects(self):
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()     
+        
+
+class Window3(QWidget):
+    def __init__(self):
+        super(Window3, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.btn1 = QPushButton("В каких филиалах есть записи о пациенте")
+        self.btn1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Средний возраст медиков")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn3 = QPushButton("Количество отделений в филиале")
+        self.btn3.setStyleSheet(QSS_white)
+        self.btn4 = QPushButton("Отделения в филиале")
+        self.btn4.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Список пациентов филиала")
+        self.btn5.setStyleSheet(QSS_white)
+        self.btn6 = QPushButton("Список врачей отделения")
+        self.btn6.setStyleSheet(QSS_white)
+        self.btn7 = QPushButton("Средний возраст пациентов конкретного пола")
+        self.btn7.setStyleSheet(QSS_white)
+        self.btn8 = QPushButton("Информация о медиках старше выбранного возраста")
+        self.btn8.setStyleSheet(QSS_white)
+        self.btn9 = QPushButton("Адреса всех филиалов")
+        self.btn9.setStyleSheet(QSS_white)
+        self.btn10 = QPushButton("Отделения выбранного филиала на выбранном этаже")
+        self.btn10.setStyleSheet(QSS_white)
+        self.btn11 = QPushButton("Количество врачей выбранного пола")
+        self.btn11.setStyleSheet(QSS_white)
+        self.btn12 = QPushButton("Вывод информации о конкретном пациенте")
+        self.btn12.setStyleSheet(QSS_white)
+        self.btn13 = QPushButton("Вывод врачей выбранной специализации")
+        self.btn13.setStyleSheet(QSS_white)
+        self.btn14 = QPushButton("Вывести адреса филиалов с выбранным отделением")
+        self.btn14.setStyleSheet(QSS_white)
+        self.btn15 = QPushButton("Список врачей филиала")
+        self.btn15.setStyleSheet(QSS_white)
+        self.btn16 = QPushButton("Вывод информации о конкретном враче")
+        self.btn16.setStyleSheet(QSS_white)
+        self.btn17 = QPushButton("Назад")
+        self.btn17.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.btn1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn3)
+        layout.addWidget(self.btn4)
+        layout.addWidget(self.btn5)
+        layout.addWidget(self.btn6)
+        layout.addWidget(self.btn7)
+        layout.addWidget(self.btn8)
+        layout.addWidget(self.btn9)
+        layout.addWidget(self.btn10)
+        layout.addWidget(self.btn11)
+        layout.addWidget(self.btn12)
+        layout.addWidget(self.btn13)
+        layout.addWidget(self.btn14)
+        layout.addWidget(self.btn15)
+        layout.addWidget(self.btn16)
+        layout.addWidget(self.btn17)
+        self.setLayout(layout)
+        self.setWindowTitle("Выбор запросов")
+        self.resize(200, 250)
+
+    def set_connects(self):
+        self.btn17.clicked.connect(self.show_window)
+        self.btn17.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()      
+        
+
+class MainWindow(QWidget):
+    def __init__(self, parent=None, flags=Qt.WindowFlags()):
+        super().__init__(parent=parent, flags=flags)
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+    
+    def create_widgets(self):
+        self.btn1 = QPushButton("Просмотр информации медицинской организации")
+        self.btn1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Редактирование информации")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn3 = QPushButton("Выбор запросов")
+        self.btn3.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.btn1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn3)
+        self.setLayout(layout)
+        self.setWindowTitle("МЕНЮ")
+        self.resize(200, 250)
+
+    def set_connects(self):
+        self.btn1.clicked.connect(self.show_window_1)
+        self.btn1.clicked.connect(self.close)
+        self.btn2.clicked.connect(self.show_window_2)
+        self.btn2.clicked.connect(self.close)
+        self.btn3.clicked.connect(self.show_window_3)
+        self.btn3.clicked.connect(self.close)
+
+    def show_window_1(self):
+        self.w1 = Window1()
+        self.w1.show()      
+            
+    def show_window_2(self):
+        self.w2 = Window2()
+        self.w2.show()     
+        
+    def show_window_3(self):
+        self.w3 = Window3()
+        self.w3.show()  
+
+app = QApplication([])
+mw = MainWindow()
+app.exec_()
