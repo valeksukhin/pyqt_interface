@@ -6,6 +6,8 @@ from PyQt5.QtCore import *
 import mysql.connector
 from mysql.connector import Error
 
+s=''
+
 def create_connection(host_name, user_name, user_password, db_name):
     connection = None
     try:
@@ -20,7 +22,7 @@ def create_connection(host_name, user_name, user_password, db_name):
         print(f"The error '{e}' occurred")
 
     return connection
-connection = create_connection("localhost", "root", "**********", "med_org")
+connection = create_connection("localhost", "root", "*********", "med_org")
 
 QSS_white = '''QWidget {
     background-color: white;
@@ -309,7 +311,7 @@ class Window3(QWidget):
         self.btn10.setStyleSheet(QSS_white)
         self.btn11 = QPushButton("Количество врачей выбранного пола")
         self.btn11.setStyleSheet(QSS_white)
-        self.btn12 = QPushButton("Вывод информации о конкретном пациенте")
+        self.btn12 = QPushButton("Вывод информации о записях конкретного пациента")
         self.btn12.setStyleSheet(QSS_white)
         self.btn13 = QPushButton("Вывод врачей выбранной специализации")
         self.btn13.setStyleSheet(QSS_white)
@@ -347,6 +349,17 @@ class Window3(QWidget):
         self.resize(200, 250)
 
     def set_connects(self):
+       # self.btn4.clicked.connect(self.show_window_s4)
+        self.btn6.clicked.connect(self.show_window_s6)
+        self.btn6.clicked.connect(self.close)
+        self.btn7.clicked.connect(self.show_window_s7)
+        self.btn7.clicked.connect(self.close)
+        self.btn11.clicked.connect(self.show_window_s11)
+        self.btn11.clicked.connect(self.close)
+        self.btn12.clicked.connect(self.show_window_s12)
+        self.btn12.clicked.connect(self.close)
+        self.btn16.clicked.connect(self.show_window_s16)
+        self.btn16.clicked.connect(self.close)
         self.btn17.clicked.connect(self.show_window)
         self.btn17.clicked.connect(self.close)
 
@@ -354,7 +367,428 @@ class Window3(QWidget):
         self.w = MainWindow()
         self.w.show()      
         
+    def show_window_s6(self):
+        self.s6 = Windows6()
+        self.s6.show()      
+        
+    def show_window_s7(self):
+        self.s7 = Windows7()
+        self.s7.show()   
+        
+    def show_window_s11(self):
+        self.s11 = Windows11()
+        self.s11.show()           
+        
+    def show_window_s12(self):
+        self.s12 = Windows12()
+        self.s12.show()  
+        
+    def show_window_s16(self):
+        self.s16 = Windows16()
+        self.s16.show()          
 
+class Windows6(QWidget):
+    def __init__(self):
+        super(Windows6, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.edit1 = QLineEdit("Введите отделение")
+        self.edit1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Далее")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.edit1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Медики в отделении")
+        self.resize(200, 250)
+        
+    def set_connects(self):
+
+        self.edit1.editingFinished.connect(self.on_edited)
+        self.btn2.clicked.connect(self.show_window_s61)
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()    
+        
+    def show_window_s61(self):
+        self.s61 = s61()
+        self.s61.show()        
+        self.s61.fill()
+        
+        
+    def on_edited(self):
+        global s
+        s = self.edit1.text()            
+            
+        
+class Windows7(QWidget):
+    def __init__(self):
+        super(Windows7, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.edit1 = QLineEdit("Введите пол")
+        self.edit1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Далее")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.edit1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Введите пол")
+        self.resize(200, 250)
+        
+    def set_connects(self):
+
+        self.edit1.editingFinished.connect(self.on_edited)
+        self.btn2.clicked.connect(self.show_window_s71)
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()    
+        
+    def show_window_s71(self):
+        self.s71 = s71()
+        self.s71.show()        
+        self.s71.fill()
+        
+        
+    def on_edited(self):
+        global s
+        s = self.edit1.text()   
+        
+class Windows11(QWidget):
+    def __init__(self):
+        super(Windows11, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.edit1 = QLineEdit("Введите пол врачей")
+        self.edit1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Далее")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.edit1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Количество врачей определенного пола")
+        self.resize(200, 250)
+        
+    def set_connects(self):
+
+        self.edit1.editingFinished.connect(self.on_edited)
+        self.btn2.clicked.connect(self.show_window_s111)
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()    
+        
+    def show_window_s111(self):
+        self.s111 = s111()
+        self.s111.show()        
+        self.s111.fill()
+        
+        
+    def on_edited(self):
+        global s
+        s = self.edit1.text()   
+                        
+        
+class Windows12(QWidget):
+    def __init__(self):
+        super(Windows12, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.edit1 = QLineEdit("Введите ФИО пациента")
+        self.edit1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Далее")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.edit1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Информация о записях пациента")
+        self.resize(200, 250)
+        
+    def set_connects(self):
+
+        self.edit1.editingFinished.connect(self.on_edited)
+        self.btn2.clicked.connect(self.show_window_s121)
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()    
+        
+    def show_window_s121(self):
+        self.s121 = s121()
+        self.s121.show()        
+        self.s121.fill()
+        
+        
+    def on_edited(self):
+        global s
+        s = self.edit1.text()   
+        
+class Windows16(QWidget):
+    def __init__(self):
+        super(Windows16, self).__init__()
+        self.create_widgets()
+        self.set_look()
+        self.set_connects()
+        self.show()
+        
+    def create_widgets(self):
+        self.edit1 = QLineEdit("Введите ФИО врача")
+        self.edit1.setStyleSheet(QSS_white)
+        self.btn2 = QPushButton("Далее")
+        self.btn2.setStyleSheet(QSS_white)
+        self.btn5 = QPushButton("Назад")
+        self.btn5.setStyleSheet(QSS_white)
+        
+    def set_look(self):
+        layout = QVBoxLayout()
+        self.setStyleSheet(QSS_blue)
+        layout.addWidget(self.edit1)
+        layout.addWidget(self.btn2)
+        layout.addWidget(self.btn5)
+        self.setLayout(layout)
+        self.setWindowTitle("Информация о медике")
+        self.resize(200, 250)
+        
+    def set_connects(self):
+
+        self.edit1.editingFinished.connect(self.on_edited)
+        self.btn2.clicked.connect(self.show_window_s161)
+        self.btn5.clicked.connect(self.show_window)
+        self.btn5.clicked.connect(self.close)
+
+    def show_window(self):
+        self.w = MainWindow()
+        self.w.show()    
+        
+    def show_window_s161(self):
+        self.s161 = s161()
+        self.s161.show()        
+        self.s161.fill()
+        
+        
+    def on_edited(self):
+        global s
+        s = self.edit1.text()           
+                
+        
+
+class s61(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Список медиков в отделении')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+        global s
+        labels = ['doctor_name', 'doctor_job', 'filial_name', 'filial_address']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+        cur.execute("""
+        select distinct doctor_name, doctor_job, filial_name, filial_address from doctor inner join doc_in_dep on doctor.doctor_id = doc_in_dep.doctor_id
+        inner join department on department.doc_in_dep_id = doc_in_dep.doc_in_dep_id 
+        left join filial on department.dep_id = filial.dep_id
+        where department_name = %s;
+        """, (s,))
+
+        results = cur.fetchall()
+        for (doctor_name, doctor_job, filial_name, filial_address) in results:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(doctor_name)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(str(doctor_job)))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(str(filial_name)))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(str(filial_address)))
+                                
+ 
+
+class s71(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Средний возраст пациентов по полу')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+        global s
+        labels = ['Средний возраст пациентов по полу']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+        cur.execute("""
+        select avg(patient_age) from patient where patient_sex like %s;
+        """, (s,))
+        results = cur.fetchall()
+        for (department_name) in results:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(department_name)))
+            
+class s111(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Количество врачей по полу')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+        global s
+        labels = ['Количество врачей по полу']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+        cur.execute("""
+        select count(doctor_id) from doctor 
+                where doctor_sex = %s;
+        """, (s,))
+        results = cur.fetchall()
+        for (doctor_id) in results:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(doctor_id)))            
+                    
+class s121(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Информация о записях пациенте')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+        global s
+        labels = ['patient_name', 'patient_telephone', 'patient_sex', 'patient_age', 'department_name', 'filial_name']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+        cur.execute("""
+        select distinct patient_name, patient_telephone, patient_sex, patient_age, department_name, filial_name
+        from patient inner join pat_in_dep on
+        patient.patient_id = pat_in_dep.patient_id inner join department on pat_in_dep.department_id = department.department_id 
+        inner join pat_in_fil on patient.patient_id = pat_in_fil.patient_id 
+        inner join filial on department.dep_id = filial.dep_id
+        where patient_name = %s;
+        """, (s,))
+        results = cur.fetchall()
+        for (patient_name, patient_telephone, patient_sex, patient_age, department_name, filial_name) in results:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(patient_name)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(str(patient_telephone)))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(str(patient_sex)))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(str(patient_age)))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(str(department_name)))
+            self.table_widget.setItem(row, 5, QTableWidgetItem(str(filial_name)))
+            
+class s161(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Информация о враче')
+        self.table_widget = QTableWidget()
+        self.setCentralWidget(self.table_widget)
+        
+
+    def fill(self):
+        self.table_widget.clear()
+        global s
+        labels = ['doctor_name', 'doctor_telephone', 'doctor_sex', 'doctor_age', 'doctor_experience', 'doctor_job', 'doctor_room', 'department_name', 'filial_name']
+
+        self.table_widget.setColumnCount(len(labels))
+        self.table_widget.setHorizontalHeaderLabels(labels)
+        cur = connection.cursor()
+        cur.execute("""
+        select distinct doctor_name, doctor_telephone, doctor_sex, doctor_age, doctor_experience, doctor_job, doctor_room, department_name, filial_name
+        from doctor inner join doc_in_dep on
+        doctor.doctor_id = doc_in_dep.doctor_id inner join department on doc_in_dep.department_id = department.department_id
+        inner join doc_in_fil on doctor.doctor_id = doc_in_fil.doctor_id
+        inner join filial on department.dep_id = filial.dep_id
+        where doctor_name = %s;
+        """, (s,))
+        results = cur.fetchall()
+        for (doctor_name, doctor_telephone, doctor_sex, doctor_age, doctor_experience, doctor_job, doctor_room, department_name, filial_name) in results:
+            row = self.table_widget.rowCount()
+            self.table_widget.setRowCount(row + 1)
+            self.table_widget.setItem(row, 0, QTableWidgetItem(str(doctor_name)))
+            self.table_widget.setItem(row, 1, QTableWidgetItem(str(doctor_telephone)))
+            self.table_widget.setItem(row, 2, QTableWidgetItem(str(doctor_sex)))
+            self.table_widget.setItem(row, 3, QTableWidgetItem(str(doctor_age)))
+            self.table_widget.setItem(row, 4, QTableWidgetItem(str(doctor_experience)))
+            self.table_widget.setItem(row, 5, QTableWidgetItem(str(doctor_job)))  
+            self.table_widget.setItem(row, 6, QTableWidgetItem(str(doctor_room)))
+            self.table_widget.setItem(row, 7, QTableWidgetItem(str(department_name)))
+            self.table_widget.setItem(row, 8, QTableWidgetItem(str(filial_name)))  
+                    
 class MainWindow(QWidget):
     def __init__(self, parent=None, flags=Qt.WindowFlags()):
         super().__init__(parent=parent, flags=flags)
